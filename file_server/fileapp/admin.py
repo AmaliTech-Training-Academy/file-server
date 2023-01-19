@@ -1,4 +1,8 @@
 from django.contrib import admin
 from fileapp.models import File
 
-admin.site.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('title', 'downloads')
+
+admin.site.register(File, FileAdmin)
+
