@@ -5,4 +5,4 @@ class File(models.Model):
     description = models.TextField()
     file = models.FileField(upload_to='uploads/')
     downloads = models.IntegerField(default=0)
-    
+    emails_sent = models.IntegerField(default=0)
