@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from fileapp.forms import FileForm
+from fileapp.forms import FileForm,SendFileForm
 from fileapp.models import File
 from django.views.generic import ListView
 from django.core.mail import EmailMessage
-from .forms import SendFileForm
+
 
 
 
@@ -12,27 +12,18 @@ def upload_file(request):
         form = FileForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('file_list')
+            return redirect('upload_list')
     else:
         form = FileForm()
-    return render(request, 'upload.html', {'form': form})
+    return render(request, 'upload_file.html', {'form': form})
 
 def download_file(request, file_id):
-    file = get_object_or_404(File, pk=file_id)
+    file = File.objects.get(pk=file_id)
+    if file is None:
+        print("file not found")
     file.downloads += 1
     file.save()
-    return render(request, 'download.html', {'file': file})
-
-# class Upload_List(ListView):
-#     model = File
-#     template_name = "fileapp/upload_file.html"
-
-
-from django.core.mail import EmailMessage
-from django.core.files.base import File
-from django.shortcuts import render, redirect
-from fileapp.models import File
-from .forms import SendFileForm
+    return render(request, 'download_file.html', {'file': file})
 
 def send_file_email(request, file_id):
     if request.method == 'POST':
@@ -59,6 +50,12 @@ def send_file_email(request, file_id):
         form = SendFileForm()
     return render(request, 'send_file_email.html', {'form': form, 'file': file})
 
+class FileListView(ListView):
+    model = File
+    template_name = 'upload_list.html'
+    context_object_name = 'files'
+    ordering = ['title']
+    paginate_by = 20
 
 
     
