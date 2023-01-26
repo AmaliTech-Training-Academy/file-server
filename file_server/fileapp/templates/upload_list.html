@@ -7,10 +7,8 @@
     <li>
       <a href="{% url 'download_file' file.id %}">{{ file.title }}</a>
       <p>{{ file.description }}</p>
-      <p>Downloads: {{ file.downloads }}</p>
     </li>
   {% endfor %}
 </ul>
 {% endblock %}
 
-{% comment %} {% endblock %} --> {% endcomment %}

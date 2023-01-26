@@ -24,6 +24,8 @@ def download_file(request, file_id):
     file.downloads += 1
     file.save()
     return render(request, 'download_file.html', {'file': file})
+    # return FileResponse(models.file, as_attachment=True)
+
 
 def send_file_email(request, file_id):
     if request.method == 'POST':
