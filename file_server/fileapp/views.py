@@ -3,7 +3,8 @@ from fileapp.forms import FileForm,SendFileForm
 from fileapp.models import File
 from django.views.generic import ListView
 from django.core.mail import EmailMessage
-from django.http import HttpRequest,FileResponse
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
 
 
 
@@ -50,33 +51,6 @@ def send_file_email(request, file_id):
         form = SendFileForm()
     return render(request, 'send_file.html', {'form': form, 'file': file})
 
-
-# def send_file_email(request, file_id):
-#     if request.method == 'POST':
-#         form = SendFileForm(request.POST)
-#         if form.is_valid():
-#             file = File.objects.get(pk=file_id)
-#             recipient_email = form.cleaned_data['recipient_email']
-#             subject = form.cleaned_data['subject']
-#             message = form.cleaned_data['message']
-#             email = EmailMessage(
-#                 subject,
-#                 message,
-#                 'from@example.com',
-#                 [recipient_email],
-#                 ['bcc@example.com'],
-#                 reply_to=['another@example.com']
-#             )
-#             email.attach_file(file.file.path)
-#             email.send()
-#             file.emails_sent += 1
-#             file.save()
-#             return redirect('home')
-#             # return render(request, 'send_file.html', {'form': form, 'file': file})
-    # else:
-    #     form = SendFileForm()
-    # return render(request, 'send_file.html', {'form': form, 'file': file})
-
 class FileListView(ListView):
     model = File
     template_name = 'upload_list.html'
@@ -84,5 +58,8 @@ class FileListView(ListView):
     ordering = ['title']
     paginate_by = 20
 
-
+# class FileDeleteView(DeleteView):
+#     model = File
+#     success_url = reverse_lazy('upload_list')
+#     template_name = 'fileapp/file_confirm_delete.html'
     
