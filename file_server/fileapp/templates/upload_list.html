@@ -6,6 +6,7 @@
   {% for file in files %}
     <li>
       <a href="{% url 'download_file' file.id %}">{{ file.title }}</a>
+      
       <p>{{ file.description }}</p>
     </li>
   {% endfor %}

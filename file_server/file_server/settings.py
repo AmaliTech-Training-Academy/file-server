@@ -129,3 +129,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'youremail@gmail.com'
 EMAIL_HOST_PASSWORD = 'yourpassword'
 EMAIL_PORT = 587
+
+
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/'

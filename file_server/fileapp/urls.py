@@ -1,6 +1,7 @@
 from django.urls import path
 from fileapp import views
 from .views import FileListView
+from django.core.mail import EmailMessage
 
 
 urlpatterns = [
