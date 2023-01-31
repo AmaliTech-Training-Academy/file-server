@@ -1,9 +1,0 @@
-<h1>{{ file.title }}</h1>
-<p>{{ file.description }}</p>
-
-    <li>
-        <button><a href="{{ file.file.url }}" download>Download</a></button>
-    </li>
-    <li>
-        <button><a href="{% url 'send_file_email' file.id %}">Send Email</a></button>
-    </li>
