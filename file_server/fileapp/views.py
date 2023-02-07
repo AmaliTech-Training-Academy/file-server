@@ -13,16 +13,16 @@ def upload_file(request):
         form = FileForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('upload_list')
+            return redirect('fileapp:upload_list')
     else:
         form = FileForm()
-    return render(request, 'upload_file.html', {'form': form})
+    return render(request, 'fileapp/upload_file.html', {'form': form})
 
 def download_file(request, file_id):
     file = File.objects.get(pk=file_id)
     file.downloads += 1
     file.save()
-    return render(request, 'download_file.html', {'file': file})
+    return render(request, 'fileapp/download_file.html', {'file': file})
     
 
 
@@ -46,14 +46,14 @@ def send_file_email(request, file_id):
             email.send()
             file.emails_sent += 1
             file.save()
-            return redirect('home')
+            return redirect('fileapp:upload_list')
     else:
         form = SendFileForm()
-    return render(request, 'send_file.html', {'form': form, 'file': file})
+    return render(request, 'fileapp/send_file.html', {'form': form, 'file': file})
 
 class FileListView(ListView):
     model = File
-    template_name = 'upload_list.html'
+    template_name = 'fileapp/upload_list.html'
     context_object_name = 'files'
     ordering = ['title']
     paginate_by = 20

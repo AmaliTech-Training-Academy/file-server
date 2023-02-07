@@ -8,7 +8,7 @@
   <header>
     <nav>
       {% comment %} <a href="{% url 'home' %}">Home</a> {% endcomment %}
-      <a href="{% url 'upload_list' %}">Files</a>
+      <a href="{% url 'fileapp:upload_list' %}">Files</a>
       {% comment %} {% if user.is_authenticated %} {% endcomment %}
         {% comment %} <a href="{% url 'logout' %}">Logout</a>
       {% else %}

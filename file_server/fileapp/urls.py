@@ -2,7 +2,7 @@ from django.urls import path
 from fileapp import views
 from .views import FileListView
 from django.core.mail import EmailMessage
-
+app_name = 'fileapp'
 
 urlpatterns = [
     path('upload_file/', views.upload_file, name='upload_file'),
