@@ -1,0 +1,13 @@
+<!-- <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+</form> -->
+
+<h1>Sign up</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Email address">
+    <input type="password" name="password" placeholder="Password">
+    <button type="submit">Sign up</button>
+</form>
