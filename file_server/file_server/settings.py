@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authentication',
 
 ]
+AUTH_USER_MODEL = "authentication.CustomUser"  
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -126,6 +127,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = 'uploads/'
 
@@ -135,3 +137,4 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'douglas.danso@amalitech.com'
 EMAIL_HOST_PASSWORD = 'kkqhyzyzysyoyfyj'
+
