@@ -4,7 +4,7 @@ from fileapp.models import File
 from django.views.generic import ListView
 from django.core.mail import EmailMessage
 from django.urls import reverse_lazy
-from django.views.generic import DeleteView
+from django.views.generic import DetailView
 
 
 
@@ -57,9 +57,20 @@ class FileListView(ListView):
     context_object_name = 'files'
     ordering = ['title']
     paginate_by = 20
+class FileDetailView(DetailView):
+    model = File
+    template_name = 'fileapp/file_detail.html'
 
-# class FileDeleteView(DeleteView):
-#     model = File
-#     success_url = reverse_lazy('upload_list')
-#     template_name = 'fileapp/file_confirm_delete.html'
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['file'] = self.get_object()
+        return context
+
+def search_view(request):
+    query = request.GET.get('q')
+    if query:
+        files = File.objects.filter(title__icontains=query)
+    else:
+        files = []
+    return render(request, 'fileapp/search.html', {'files': files})
+

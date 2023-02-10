@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h3><a href="{% url 'fileapp:search' %}">search files</a><h3>
 <h1>List of Files</h1>
+
 <ul>
   {% for file in files %}
     <li>
