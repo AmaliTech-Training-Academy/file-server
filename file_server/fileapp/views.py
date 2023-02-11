@@ -3,7 +3,6 @@ from fileapp.forms import FileForm,SendFileForm
 from fileapp.models import File
 from django.views.generic import ListView
 from django.core.mail import EmailMessage
-from django.urls import reverse_lazy
 from django.views.generic import DetailView
 
 
