@@ -13,7 +13,10 @@
                 <p>{{ file.description }}</p>
             </li>
             {% endfor %}
+
         </ul>
+        {% if user.is_superuser %}
+        <a href="{% url 'fileapp:logs' %}"> logs </a> {% endif %}
         <h3><a href="{% url 'authentication:logout' %}">log out</a>
             <h3></h3>
             {% endblock %}
