@@ -1,17 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<h3><a href="{% url 'fileapp:search' %}">search files</a>
+    <h3>
+        <h1>List of Files</h1>
 
-{% block content %}
-<h3><a href="{% url 'fileapp:search' %}">search files</a><h3>
-<h1>List of Files</h1>
+        <ul>
+            {% for file in files %}
+            <li>
+                <a href="{% url 'fileapp:download_file' file.id %}">{{ file.title }}</a>
 
-<ul>
-  {% for file in files %}
-    <li>
-      <a href="{% url 'fileapp:download_file' file.id %}">{{ file.title }}</a>
-      
-      <p>{{ file.description }}</p>
-    </li>
-  {% endfor %}
-</ul>
-{% endblock %}
-
+                <p>{{ file.description }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        <h3><a href="{% url 'authentication:logout' %}">log out</a>
+            <h3></h3>
+            {% endblock %}

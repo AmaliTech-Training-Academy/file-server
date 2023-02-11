@@ -15,6 +15,10 @@ from django.core.mail import send_mail
 from django.utils.encoding import force_str
 
 
+def home_view(request):
+    context = {}
+    return render(request, 'home.html', context)
+
 
 def signup(request):
     if request.method == 'POST':
