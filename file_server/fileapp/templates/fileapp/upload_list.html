@@ -1,6 +1,8 @@
  {% block content %}
 <h3><a href="{% url 'fileapp:search' %}">search files</a>
     <h3>
+        {% if user.is_superuser %}
+        <a href="{% url 'fileapp:upload_file' %}"> upload file </a> {% endif %}
         <h1>List of Files</h1>
 
         <ul>
