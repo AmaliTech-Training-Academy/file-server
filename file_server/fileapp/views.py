@@ -36,9 +36,9 @@ def send_file_email(request, file_id):
             email = EmailMessage(
                 subject,
                 message,
-                'from@example.com',
+                'douglas.danso@amalitech.com',
                 [recipient_email],
-                ['bcc@example.com'],
+                # ['bcc@example.com'],
                 reply_to=['another@example.com']
             )
             email.attach_file(file.file.path)

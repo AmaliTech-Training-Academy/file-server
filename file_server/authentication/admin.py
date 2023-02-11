@@ -2,8 +2,11 @@ from django.contrib import admin
 from authentication.models import CustomUser
 from fileapp.models import File
 
-class AuthAdmin(admin.ModelAdmin):
-#     list_display = ('email')
+class CustomUserAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(CustomUser,File, AuthAdmin)
+# class FileAdmin(admin.ModelAdmin):
+#     list_display = ( 'downloads','emails_sent')
+
+admin.site.register(CustomUser, CustomUserAdmin)
+# admin.site.register(File, FileAdmin)

@@ -16,8 +16,8 @@ from django.utils.encoding import force_str
 
 
 def home_view(request):
-    context = {}
-    return render(request, 'home.html', context)
+    # context = {}
+    return render(request, 'home.html')
 
 
 def signup(request):
@@ -56,7 +56,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('fileapp:upload_list')
+        return redirect('home')
         
     else:
         return render(request, 'accounts/activation_invalid.html')
@@ -84,7 +84,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/home')
+    return redirect('/')
     
 
 
