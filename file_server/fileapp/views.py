@@ -50,6 +50,7 @@ def send_file_email(request, file_id):
         form = SendFileForm()
     return render(request, 'fileapp/send_file.html', {'form': form, 'file': file})
 
+
 class FileListView(ListView):
     model = File
     template_name = 'fileapp/upload_list.html'
@@ -60,10 +61,14 @@ class FileDetailView(DetailView):
     model = File
     template_name = 'fileapp/file_detail.html'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['file'] = self.get_object()
         return context
+def logs(request):
+    files = File.objects.all()
+    return render(request, 'fileapp/logs.html',{'files':files})
 
 def search_view(request):
     query = request.GET.get('q')
