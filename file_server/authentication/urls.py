@@ -1,11 +1,12 @@
 from django.urls import path
 from authentication import views
+from authentication.views import SignUpView
 
 
 app_name = 'authentication'
 
 urlpatterns = [
-    path('signup/', views.signup, name='signup'),
+    path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('activate/<str:uidb64>/<str:token>/', views.activate, name='account_activation'),

@@ -7,41 +7,41 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
-from .forms import LogInForm
+from .forms import LogInForm,SignUpForm
 from django.contrib.auth.forms import PasswordResetForm
 from .models import CustomUser
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.encoding import force_str
+from django.views import generic
+
+class SignUpView(generic.CreateView):
+    form_class = SignUpForm
+    template_name = 'accounts/signup.html'
+
+    def form_valid(self, form):
+        
+        user = form.save(commit=False)
+        
+        user.is_active = False
+        user.save()
+
+        current_site = get_current_site(self.request)
+        message = render_to_string('accounts/account_activation.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+        mail_subject = 'Activate your account.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+        send_mail( mail_subject, message, email_from, recipient_list )
+        return render(self.request, 'accounts/email_verification.html')
 
 
 def home_view(request):
     return render(request, 'home.html')
-
-
-def signup(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = CustomUser.objects.create_user(
-            username = email,
-            password=password,
-            is_active=False
-        )
-        current_site = get_current_site(request)
-        message = render_to_string('accounts/account_activation.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        mail_subject = 'Activate your account.'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [user.username]
-        send_mail( mail_subject, message, email_from, recipient_list )
-        return render(request, 'accounts/email_verification.html')
-    else:
-        return render(request, 'accounts/signup.html')
 
 
 def activate(request, uidb64, token):
@@ -55,7 +55,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('home')
+        return redirect('/')
         
     else:
         return render(request, 'accounts/activation_invalid.html')
@@ -114,6 +114,7 @@ def password_reset(request):
     else:
         form = PasswordResetForm()
     return render(request, 'passwords/password_reset_form.html', {'form': form})
+
 
 def password_reset_done(request):
     return render(request, 'passwords/password_reset_done.html')
