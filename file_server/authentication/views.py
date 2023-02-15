@@ -115,7 +115,6 @@ def password_reset(request):
         form = PasswordResetForm()
     return render(request, 'passwords/password_reset_form.html', {'form': form})
 
-
 def password_reset_done(request):
     return render(request, 'passwords/password_reset_done.html')
 
