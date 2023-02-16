@@ -8,5 +8,5 @@ class CustomUserAdmin(admin.ModelAdmin):
 # class FileAdmin(admin.ModelAdmin):
 #     list_display = ( 'downloads','emails_sent')
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CustomUser)
 # admin.site.register(File, FileAdmin)

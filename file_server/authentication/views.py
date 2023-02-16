@@ -94,7 +94,7 @@ def password_reset(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             try:
-                user = CustomUser.objects.get(username=email)
+                user = CustomUser.objects.get(email=email)
                 current_site = get_current_site(request)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = default_token_generator.make_token(user)
@@ -105,7 +105,7 @@ def password_reset(request):
                     'token': token,
                 })
                 email_subject = 'Password reset on ' + current_site.domain
-                email = EmailMessage(email_subject, email_body, to=[user.username])
+                email = EmailMessage(email_subject, email_body, to=[user.email])
                 email.send()
                 return redirect('authentication:password_reset_done')
                 
@@ -131,7 +131,7 @@ def reset_password_confirm(request, uidb64, token):
             new_password = request.POST.get('new_password')
             user.set_password(new_password)
             user.save()
-            user = authenticate(request, username=user.username, password=new_password)
+            user = authenticate(request, email=user.email, password=new_password)
             login(request, user)
             return render(request, 'passwords/password_reset_complete.html')
         
