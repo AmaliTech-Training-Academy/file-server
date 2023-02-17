@@ -1,3 +1,10 @@
-<h1>Activate your account</h1>
-<p>Click on the link below to activate your account:</p>
-<a href="{{ domain }}{% url 'authentication:account_activation' uidb64=uid token=token %}">Activate</a>
+<html>
+    <head>
+        <title>Account Activation</title>
+    </head>
+    <body>
+        <p>Dear {{ user.email }},</p>
+        <p>Click on the link below to activate your account:</p>
+        <a href="http://{{ domain }}{% url 'authentication:account_activation' uidb64=uid token=token %}">http://{{ domain }}{% url 'authentication:account_activation' uidb64=uid token=token %}</a>
+    </body>
+</html>

@@ -4,19 +4,32 @@ from fileapp.models import File
 from django.views.generic import ListView
 from django.core.mail import EmailMessage
 from django.views.generic import DetailView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.http import HttpRequest
+from authentication.models import CustomUser
+# from django.contrib.auth import get_user_model
 
 
+# CustomUser = get_user_model()
 
+
+@login_required
 def upload_file(request):
-    if request.method == 'POST':
-        form = FileForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('fileapp:upload_list')
+    user = CustomUser.objects.get(pk=request.user.pk)
+    if user.is_superuser:
+        if request.method == 'POST':
+            form = FileForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect('fileapp:upload_list')
+        else:
+            form = FileForm()
+        return render(request, 'fileapp/upload_file.html', {'form': form})
     else:
-        form = FileForm()
-    return render(request, 'fileapp/upload_file.html', {'form': form})
+        return HttpRequest('<h1> You are not authorised to view this page</h1>')
 
+@login_required
 def download_file(request, file_id):
     file = File.objects.get(pk=file_id)
     file.downloads += 1
@@ -24,7 +37,7 @@ def download_file(request, file_id):
     return render(request, 'fileapp/download_file.html', {'file': file})
     
 
-
+@login_required
 def send_file_email(request, file_id):
     file = get_object_or_404(File, pk=file_id)
     if request.method == 'POST':
@@ -51,12 +64,15 @@ def send_file_email(request, file_id):
     return render(request, 'fileapp/send_file.html', {'form': form, 'file': file})
 
 
+
+@method_decorator(login_required, name='dispatch')
 class FileListView(ListView):
     model = File
     template_name = 'fileapp/upload_list.html'
     context_object_name = 'files'
     ordering = ['title']
     paginate_by = 20
+@method_decorator(login_required, name='dispatch')
 class FileDetailView(DetailView):
     model = File
     template_name = 'fileapp/file_detail.html'
@@ -66,10 +82,16 @@ class FileDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['file'] = self.get_object()
         return context
-def logs(request):
-    files = File.objects.all()
-    return render(request, 'fileapp/logs.html',{'files':files})
 
+@login_required
+def logs(request):
+    user = CustomUser.objects.get(pk=request.user.pk)
+    if user.is_superuser:
+        files = File.objects.all()
+        return render(request, 'fileapp/logs.html',{'files':files})
+    else:
+        return HttpRequest('<h1> You are not authorised to view this page</h1>')
+@login_required
 def search_view(request):
     query = request.GET.get('q')
     if query:

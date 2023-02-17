@@ -14,6 +14,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.encoding import force_str
 from django.views import generic
+from django.utils.html import strip_tags
 
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
@@ -27,12 +28,13 @@ class SignUpView(generic.CreateView):
         user.save()
 
         current_site = get_current_site(self.request)
-        message = render_to_string('accounts/account_activation.html', {
+        message=render_to_string('accounts/account_activation.html', {
                 'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
+        message = strip_tags(message)
         mail_subject = 'Activate your account.'
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [user.email]
@@ -105,6 +107,7 @@ def password_reset(request):
                     'token': token,
                 })
                 email_subject = 'Password reset on ' + current_site.domain
+                email_body = strip_tags(email_body)
                 email = EmailMessage(email_subject, email_body, to=[user.email])
                 email.send()
                 return redirect('authentication:password_reset_done')
