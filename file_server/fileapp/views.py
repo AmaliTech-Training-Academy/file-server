@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import HttpRequest
 from authentication.models import CustomUser
-# from django.contrib.auth import get_user_model
+from django.http import HttpResponseForbidden
 
 
 # CustomUser = get_user_model()
@@ -17,6 +17,7 @@ from authentication.models import CustomUser
 @login_required
 def upload_file(request):
     user = CustomUser.objects.get(pk=request.user.pk)
+    print(user)
     if user.is_superuser:
         if request.method == 'POST':
             form = FileForm(request.POST, request.FILES)
@@ -27,7 +28,7 @@ def upload_file(request):
             form = FileForm()
         return render(request, 'fileapp/upload_file.html', {'form': form})
     else:
-        return HttpRequest('<h1> You are not authorised to view this page</h1>')
+        return HttpResponseForbidden('<h1> You are not authorised to view this page</h1>')
 
 @login_required
 def download_file(request, file_id):
@@ -90,7 +91,7 @@ def logs(request):
         files = File.objects.all()
         return render(request, 'fileapp/logs.html',{'files':files})
     else:
-        return HttpRequest('<h1> You are not authorised to view this page</h1>')
+        return HttpResponseForbidden('<h1> You are not authorised to view this page</h1>')
 @login_required
 def search_view(request):
     query = request.GET.get('q')

@@ -67,6 +67,7 @@ def activate(request, uidb64, token):
 
 def login_view(request):
     form = LogInForm()
+    next_url = request.GET.get('next', '')
     if request.method == 'POST':
         form = LogInForm(request, data=request.POST)
         if form.is_valid():
@@ -75,13 +76,13 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('fileapp:upload_list')
-                
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect('fileapp:upload_list')
             else:
-                return render(request, 'login.html', {'error': 'Invalid login credentials'})
-        else:
-            form = LogInForm()
-    return render(request, 'accounts/login.html', {'form': form})
+                return render(request, 'login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
+    return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
 
 def logout_view(request):
     logout(request)
