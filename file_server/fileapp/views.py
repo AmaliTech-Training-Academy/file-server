@@ -92,6 +92,7 @@ def logs(request):
         return render(request, 'fileapp/logs.html',{'files':files})
     else:
         return HttpResponseForbidden('<h1> You are not authorised to view this page</h1>')
+        
 @login_required
 def search_view(request):
     query = request.GET.get('q')
