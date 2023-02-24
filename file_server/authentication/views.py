@@ -7,7 +7,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import account_activation_token
-from .forms import LogInForm,SignUpForm
+from .forms import LogInForm,SignUpForm,CustomPasswordResetForm
 from django.contrib.auth.forms import PasswordResetForm
 from .models import CustomUser
 from django.conf import settings
@@ -15,7 +15,8 @@ from django.core.mail import send_mail
 from django.utils.encoding import force_str
 from django.views import generic
 from django.utils.html import strip_tags
-
+from .validator import CustomPasswordValidator
+from django.core.exceptions import ValidationError
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
     template_name = 'accounts/signup.html'
@@ -124,7 +125,7 @@ def password_reset_done(request):
 
 def reset_password_confirm(request, uidb64, token):
     try:
-        uid =force_str(urlsafe_base64_decode(uidb64))
+        uid = force_str(urlsafe_base64_decode(uidb64))
         user = CustomUser.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
         user = None
@@ -132,15 +133,19 @@ def reset_password_confirm(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
 
         if request.method == 'POST':
-            new_password = request.POST.get('new_password')
-            user.set_password(new_password)
-            user.save()
-            user = authenticate(request, email=user.email, password=new_password)
-            login(request, user)
-            return render(request, 'passwords/password_reset_complete.html')
-        
+            form = CustomPasswordResetForm(request.POST)
+            if form.is_valid():
+                new_password = form.cleaned_data.get('password1')
 
-        return render(request, 'passwords/password_reset_confirm.html', {'user': user})
+                user.set_password(new_password)
+                user.save()
+                user = authenticate(request, email=user.email, password=new_password)
+                login(request, user)
+
+                return render(request, 'passwords/password_reset_complete.html')
+        else:
+            form = CustomPasswordResetForm()
+
+        return render(request, 'passwords/password_reset_confirm.html', {'form': form})
     else:
         return render(request,'passwords/reset_invalid.html')
-    

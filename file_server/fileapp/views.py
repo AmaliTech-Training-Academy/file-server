@@ -11,7 +11,7 @@ from authentication.models import CustomUser
 from django.http import HttpResponseForbidden
 
 
-# CustomUser = get_user_model()
+
 
 
 @login_required
