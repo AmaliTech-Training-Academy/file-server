@@ -6,9 +6,10 @@ from django.core.mail import EmailMessage
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.http import HttpRequest
 from authentication.models import CustomUser
 from django.http import HttpResponseForbidden
+from .thumbnails import generate_thumbnail
+from django.core.files.base import ContentFile
 
 
 
@@ -17,12 +18,16 @@ from django.http import HttpResponseForbidden
 @login_required
 def upload_file(request):
     user = CustomUser.objects.get(pk=request.user.pk)
-    print(user)
     if user.is_superuser:
         if request.method == 'POST':
             form = FileForm(request.POST, request.FILES)
             if form.is_valid():
-                form.save()
+                file = form.save()
+                file.user = request.user
+                file_path = file.file.path  # Full file path
+                thumbnail = generate_thumbnail(file_path)
+            
+                file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
                 return redirect('fileapp:upload_list')
         else:
             form = FileForm()

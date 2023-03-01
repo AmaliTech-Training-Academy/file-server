@@ -1,0 +1,16 @@
+.thumbnail {
+    max-width: 30px;
+    max-height: 30px;
+    display: flex;
+    /* flex-direction: ; */
+    margin: 5px 5px;
+}
+.image {
+    display: flex;
+    /* flex-direction: column; */
+
+}
+.preview {
+    max-width: 500px;
+    max-height: 500px;
+}

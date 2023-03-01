@@ -7,6 +7,7 @@ class File(models.Model):
     file = models.FileField(upload_to='files')
     downloads = models.IntegerField(default=0)
     emails_sent = models.IntegerField(default=0)
+    thumbnail = models.FileField(upload_to='thumbnails/', null=True, blank=True)
 
     def __str__(self):
         return self.title

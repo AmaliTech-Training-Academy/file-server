@@ -1,4 +1,12 @@
 <h1>{{ file.title }}</h1>
+<li>
+    {% comment %} <a href="{{ file.file.url }}">{{ file.name }}</a> {% endcomment %}
+    {% if file.thumbnail %}
+      <br>
+      <img class = 'preview' src="{{ file.thumbnail.url }}" alt="{{ file.title}}">
+    {% endif %}
+  </li>
+
 <p>{{ file.description }}</p>
 
     <li>

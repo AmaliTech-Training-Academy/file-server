@@ -1,22 +1,33 @@
- {% block content %}
+{% block content %}
+{%load static%}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
 <h3><a href="{% url 'fileapp:search' %}">search files</a>
-    <h3>
-        {% if user.is_superuser %}
-        <a href="{% url 'fileapp:upload_file' %}"> upload file </a> {% endif %}
-        <h1>List of Files</h1>
+<h3>
+{% if user.is_superuser %}
+<a href="{% url 'fileapp:upload_file' %}"> upload file </a> {% endif %}
+<h1>List of Files</h1>
 
-        <ul>
-            {% for file in files %}
-            <li>
-                <a href="{% url 'fileapp:download_file' file.id %}">{{ file.title }}</a>
+<ul>
+    {% for file in files %}
+    <li>
+    
+        <div class = 'image'>
+            {% if file.thumbnail %}
+                <img class="thumbnail" src="{{ file.thumbnail.url }}" alt="{{ file.title }} thumbnail">
+            {% else %}
+                <img class="thumbnail" src="{% static 'default_thumbnail.jpg' %}">
+            {% endif %}
+            <a href="{% url 'fileapp:download_file' file.id %}">{{ file.title }}</a>
+        </div>
+    </li>
 
-                
-            </li>
-            {% endfor %}
+    {% endfor %}
+</ul>
 
-        </ul>
-        {% if user.is_superuser %}
-        <a href="{% url 'fileapp:logs' %}"> logs </a> {% endif %}
-        <h3><a href="{% url 'authentication:logout' %}">log out</a>
-            <h3></h3>
-            {% endblock %}
+{% if user.is_superuser %}
+<a href="{% url 'fileapp:logs' %}"> logs </a> {% endif %}
+<h3><a href="{% url 'authentication:logout' %}">log out</a>
+<h3></h3>
+{% endblock %}
