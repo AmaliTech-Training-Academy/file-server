@@ -41,11 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django_use_email_as_username.apps.DjangoUseEmailAsUsernameConfig',
     'fileapp',
     'authentication',
+    
 
 ]
 AUTH_USER_MODEL = "authentication.CustomUser"  
+LOGIN_URL = '/login/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -105,6 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+           
 ]
 
 
@@ -124,11 +128,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = (
+    # os.path.join(BASE_DIR, "static/"),
+    os.path.join(BASE_DIR, 'static/'),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# FILE_ICONS = {
+#     'pdf': '/static/fileapp/icons/pdf.png',
+#     'doc': '/static/fileapp/icons/doc.png',
+#     'xls': '/static/fileapp/icons/xls.png',
+#     'jpg': '/static/fileapp/icons/jpg.png',
+#     'png': '/static/fileapp/icons/png.png',
+#     'svg': '/static/fileapp/icons/svg.png',
+#     'mp4': '/static/fileapp/icons/mp4.png',
+    
+#     # add more file types and icons as needed
+# }
+
 
 
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'uploads')
@@ -138,6 +160,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'douglas.danso@amalitech.com'
-EMAIL_HOST_PASSWORD = 'kkqhyzyzysyoyfyj'
+EMAIL_HOST_USER = 'douglasdanso66@gmail.com'
+EMAIL_HOST_PASSWORD = 'oaqwaiafbwajjjpt'
 
