@@ -10,6 +10,7 @@ from authentication.models import CustomUser
 from django.http import HttpResponseForbidden
 from .thumbnails import generate_thumbnail
 from django.core.files.base import ContentFile
+import fitz
 
 
 
@@ -107,3 +108,14 @@ def search_view(request):
         files = []
     return render(request, 'fileapp/search.html', {'files': files})
 
+
+@login_required
+
+def preview(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+    if file.title.lower().endswith('.pdf'):
+        with fitz.open(file.file.path) as doc:
+            pages = [doc.load_page(p) for p in range(doc.page_count)]
+        return render(request, 'fileapp/preview.html', {'file': file, 'pages': pages})
+    else:
+        return render(request, 'fileapp/preview.html', {'file': file})

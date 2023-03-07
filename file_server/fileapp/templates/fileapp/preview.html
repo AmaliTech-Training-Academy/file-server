@@ -1,0 +1,68 @@
+
+{% block content %}
+
+
+  <h1>{{ file.title }}</h1>
+
+  {% if file.title|lower|slice:'-3:' == 'pdf' %}
+  {% for page_num in range(pdf.numPages) %}
+      <!-- preview.html -->
+
+<div>
+    <canvas id="pdf-canvas"></canvas>
+    <div>
+      <button id="prev-page">Previous Page</button>
+      <button id="next-page">Next Page</button>
+    </div>
+  </div>
+  
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js">
+    // Set up variables
+    var canvas = document.getElementById('pdf-canvas');
+    var context = canvas.getContext('2d');
+    var scale = 1.5;
+    var currentPage = 1;
+    var numPages = 0;
+  
+    // Load the PDF document
+    PDFJS.getDocument('{{ file.url }}').then(function(pdf) {
+      numPages = pdf.numPages;
+  
+      // Render the first page
+      renderPage(currentPage);
+  
+      // Add event listeners for the navigation buttons
+      document.getElementById('prev-page').addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage(currentPage);
+        }
+      });
+  
+      document.getElementById('next-page').addEventListener('click', function() {
+        if (currentPage < numPages) {
+          currentPage++;
+          renderPage(currentPage);
+        }
+      });
+    });
+  
+    // Function to render a specific page
+    function renderPage(pageNum) {
+      PDFJS.getDocument('{{ file.url }}').then(function(pdf) {
+        pdf.getPage(pageNum).then(function(page) {
+          var viewport = page.getViewport(scale);
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+  
+          var renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          page.render(renderContext);
+        });
+      });
+    }
+  </script>
+  

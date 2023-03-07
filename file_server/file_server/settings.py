@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_use_email_as_username.apps.DjangoUseEmailAsUsernameConfig',
     'fileapp',
     'authentication',
     
@@ -129,7 +128,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (
-    # os.path.join(BASE_DIR, "static/"),
     os.path.join(BASE_DIR, 'static/'),
 )
 # Default primary key field type
@@ -140,13 +138,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # FILE_ICONS = {
-#     'pdf': '/static/fileapp/icons/pdf.png',
-#     'doc': '/static/fileapp/icons/doc.png',
-#     'xls': '/static/fileapp/icons/xls.png',
-#     'jpg': '/static/fileapp/icons/jpg.png',
-#     'png': '/static/fileapp/icons/png.png',
-#     'svg': '/static/fileapp/icons/svg.png',
-#     'mp4': '/static/fileapp/icons/mp4.png',
+#     'pdf': '/static/icons/pdf.png',
+#     'doc': '/static/icons/doc.jpg',
+#     'xls': '/static/icons/xls.png',
+#     'jpg': '/static/icons/jpg.png',
+#     'png': '/static/icons/png.png',
+#     'svg': '/static/icons/svg.png',
+#     'mp4': '/static/icons/video.jpg',
     
 #     # add more file types and icons as needed
 # }
