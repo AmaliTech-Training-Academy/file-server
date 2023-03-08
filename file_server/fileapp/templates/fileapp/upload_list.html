@@ -23,13 +23,13 @@
             {% elif file.title|lower|slice:'-3:' == 'xls' %} 
             <img class = "image" src="{% static 'icons/xls.png' %}" alt="pdf icon">
             {% elif file.title|lower|slice:'-3:' == 'mp4' %} 
-            <img class = "image" src="{% static 'icons/video.png' %}" alt="pdf icon">
+            <img class = "image" src="{% static 'icons/video.jpg' %}" alt="pdf icon">
             {% elif file.title|lower|slice:'-3:' == 'mp3' %} 
             <img class = "image" src="{% static 'icons/audio.png' %}" alt="pdf icon">
             {% else %}
             <img class = "image" src="{% static 'icons/default_icon.jpg' %}" alt="default thumbnail">
             {% endif %}
-            <a href="{% url 'fileapp:download_file' file.id %}">{{ file.title }}</a>
+            <a href="{% url 'fileapp:preview' file.id %}">{{ file.title }}</a>
        
         </div> 
     </li>

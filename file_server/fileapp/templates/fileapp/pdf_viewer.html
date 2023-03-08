@@ -1,0 +1,39 @@
+<div id="pdf-viewer">
+    {% for image in images %}
+        <div class="page">
+            <img src="{{ image.url }}" alt="Page {{ forloop.counter }}">
+        </div>
+    {% endfor %}
+</div>
+<button id="prev-btn">Previous</button>
+<button id="next-btn">Next</button>
+<script>
+    var currentPage = 0;
+    var numPages = {{ images|length }};
+    // Show the first page
+    showPage(currentPage);
+    // Add click handlers for the navigation buttons
+    document.getElementById("prev-btn").addEventListener("click", function() {
+        if (currentPage > 0) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    });
+    document.getElementById("next-btn").addEventListener("click", function() {
+        if (currentPage < numPages - 1) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    });
+    // Show a particular page
+    function showPage(pageNumber) {
+        var pages = document.getElementsByClassName("page");
+        for (var i = 0; i < pages.length; i++) {
+            if (i == pageNumber) {
+                pages[i].style.display = "block";
+            } else {
+                pages[i].style.display = "none";
+            }
+        }
+    }
+</script>

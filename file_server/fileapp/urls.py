@@ -12,5 +12,6 @@ urlpatterns = [
     path('search/', views.search_view, name='search'),
     path('file/<int:pk>/', FileDetailView.as_view(), name='file_detail'),
     path('logs/', views.logs, name='logs'),
-    path('preview/<int:file_id>/',views.preview,name = 'preview')
+    path('preview/<int:file_id>/',views.preview,name = 'preview'),
+    # path('display/<str:pdf_file>/',views.display_pdf,name = 'pdf_viewer')
     ]

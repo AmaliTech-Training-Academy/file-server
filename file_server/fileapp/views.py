@@ -11,7 +11,13 @@ from django.http import HttpResponseForbidden
 from .thumbnails import generate_thumbnail
 from django.core.files.base import ContentFile
 import fitz
-
+import base64
+import io
+import os
+from django.http import HttpResponse
+from django.shortcuts import render
+from pdf2image import convert_from_path
+from PyPDF2 import PdfFileReader
 
 
 
@@ -23,12 +29,12 @@ def upload_file(request):
         if request.method == 'POST':
             form = FileForm(request.POST, request.FILES)
             if form.is_valid():
-                file = form.save()
-                file.user = request.user
-                file_path = file.file.path  # Full file path
-                thumbnail = generate_thumbnail(file_path)
+                form.save()
+                # file.user = request.user
+                # file_path = file.file.path  # Full file path
+                # thumbnail = generate_thumbnail(file_path)
             
-                file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
+                # file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
                 return redirect('fileapp:upload_list')
         else:
             form = FileForm()
@@ -110,12 +116,29 @@ def search_view(request):
 
 
 @login_required
-
 def preview(request, file_id):
     file = get_object_or_404(File, id=file_id)
+    
     if file.title.lower().endswith('.pdf'):
         with fitz.open(file.file.path) as doc:
             pages = [doc.load_page(p) for p in range(doc.page_count)]
-        return render(request, 'fileapp/preview.html', {'file': file, 'pages': pages})
+            file_contents = file.file.read()
+            file_b64 = base64.b64encode(file_contents).decode('utf-8')
+        return render(request, 'fileapp/preview.html', {'file': file, 'pages': pages, 'file_b64': file_b64})
     else:
         return render(request, 'fileapp/preview.html', {'file': file})
+    
+# @login_required
+# def display_pdf(request, pdf_file):
+#     # Open the PDF file
+#     pdf = PdfFileReader(open(pdf_file, 'rb'))
+#     # Get the total number of pages in the PDF file
+#     total_pages = pdf.getNumPages()
+#     # Convert each page of the PDF file to an image
+#     images = []
+#     for i in range(total_pages):
+#         image = convert_from_path(pdf_file, dpi=200, first_page=i+1, last_page=i+1)[0]
+#         images.append(image)
+#     # Render the images on your webpage
+#     context = {'images': images}
+#     return render(request, 'fileapp/pdf_viewer.html', context)
