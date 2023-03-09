@@ -24,11 +24,15 @@ def upload_file(request):
             form = FileForm(request.POST, request.FILES)
             if form.is_valid():
                 file = form.save()
-                file.user = request.user
-                file_path = file.file.path  # Full file path
-                thumbnail = generate_thumbnail(file_path)
+                if file.title.lower().endswith('.pdf'): 
+                    file = form.save()
+                    file.user = request.user
+                    file_path = file.file.path  # Full file path
+                    thumbnail = generate_thumbnail(file_path)
             
-                file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
+                    file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
+                else:
+                    form.save()
                 return redirect('fileapp:upload_list')
         else:
             form = FileForm()
@@ -38,16 +42,10 @@ def upload_file(request):
 
 @login_required
 def download_file(request, file_id):
-    # file = File.objects.get(pk=file_id)
-    # file.downloads += 1
-    # file.save()
-    # return render(request, 'fileapp/download_file.html', {'file': file})
-    
-    file = get_object_or_404(File, id=id)
+    file = File.objects.get(pk=file_id)
+    response = FileResponse(file.file, as_attachment=True)
     file.downloads += 1
     file.save()
-    response = HttpResponse(file.file, content_type='application/force-download')
-    response['Content-Disposition'] = f'attachment; filename="{file.file.name}"'
     return response
 
     
@@ -121,7 +119,7 @@ def search_view(request):
 def preview(request, file_id):
     file = get_object_or_404(File, id=file_id)
 
-    if file.title.lower().endswith('.pdf'):
+    if file.file.name.lower().endswith('.pdf'):
         return FileResponse(open(file.file.path, 'rb'), content_type='application/pdf')
     else:
         return render(request, 'fileapp/preview.html', {'file': file})

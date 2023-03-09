@@ -14,22 +14,22 @@
     <li>
         <div class = "icon">
         
-            {% if file.title|lower|slice:'-3:' == 'pdf' %} 
+            {% if file.file.name|lower|slice:'-3:' == 'pdf' %} 
             <img class = "image" src="{% static 'icons/pdf_icon.png' %}">
-            {% elif file.title|lower|slice:'-3:' == 'jpg' %} 
+            {% elif file.file.name|lower|slice:'-3:' == 'jpg' %} 
             <img class = "image" src="{% static 'icons/jpg.png' %}" >
-            {% elif file.title|lower|slice:'-3:' == 'doc' %} 
+            {% elif file.file.name|lower|slice:'-3:' == 'doc' %} 
             <img class = "image" src="{% static 'icons/doc.png' %}" >
-            {% elif file.title|lower|slice:'-3:' == 'xls' %} 
+            {% elif file.file.name|lower|slice:'-3:' == 'xls' %} 
             <img class = "image" src="{% static 'icons/xls.png' %}" >
-            {% elif file.title|lower|slice:'-3:' == 'mp4' %} 
+            {% elif file.file.name|lower|slice:'-3:' == 'mp4' %} 
             <img class = "image" src="{% static 'icons/video.jpg' %}" >
-            {% elif file.title|lower|slice:'-3:' == 'mp3' %} 
+            {% elif file.file.name|lower|slice:'-3:' == 'mp3' %} 
             <img class = "image" src="{% static 'icons/audio.png' %}" >
             {% else %}
             <img class = "image" src="{% static 'icons/default_icon.jpg' %}" alt="default thumbnail">
             {% endif %}
-            {%if file.title|lower|slice:'-3:' == 'pdf' %}
+            {%if file.file.name|lower|slice:'-3:' == 'pdf' %}
                 <a href="{% url 'fileapp:open_page' file.id %}">{{ file.title }}</a>
             {%else%}
                 <a href="{% url 'fileapp:preview' file.id %}">{{ file.title }}</a>
