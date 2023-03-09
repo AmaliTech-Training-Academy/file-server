@@ -7,9 +7,11 @@ from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from authentication.models import CustomUser
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden,HttpResponse
 from django.shortcuts import render
 from django.http import FileResponse
+from .thumbnails import generate_thumbnail
+from django.core.files.base import ContentFile
 
 
 
@@ -21,12 +23,12 @@ def upload_file(request):
         if request.method == 'POST':
             form = FileForm(request.POST, request.FILES)
             if form.is_valid():
-                form.save()
-                # file.user = request.user
-                # file_path = file.file.path  # Full file path
-                # thumbnail = generate_thumbnail(file_path)
+                file = form.save()
+                file.user = request.user
+                file_path = file.file.path  # Full file path
+                thumbnail = generate_thumbnail(file_path)
             
-                # file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
+                file.thumbnail.save(f'{file.title}_thumbnail.jpg', ContentFile(thumbnail))
                 return redirect('fileapp:upload_list')
         else:
             form = FileForm()
@@ -36,10 +38,18 @@ def upload_file(request):
 
 @login_required
 def download_file(request, file_id):
-    file = File.objects.get(pk=file_id)
+    # file = File.objects.get(pk=file_id)
+    # file.downloads += 1
+    # file.save()
+    # return render(request, 'fileapp/download_file.html', {'file': file})
+    
+    file = get_object_or_404(File, id=id)
     file.downloads += 1
     file.save()
-    return render(request, 'fileapp/download_file.html', {'file': file})
+    response = HttpResponse(file.file, content_type='application/force-download')
+    response['Content-Disposition'] = f'attachment; filename="{file.file.name}"'
+    return response
+
     
 
 @login_required
@@ -115,4 +125,7 @@ def preview(request, file_id):
         return FileResponse(open(file.file.path, 'rb'), content_type='application/pdf')
     else:
         return render(request, 'fileapp/preview.html', {'file': file})
-    
+@login_required
+def open_page(request, file_id):
+    file = get_object_or_404(File, id=file_id)
+    return render(request, 'fileapp/open_page.html',{'file': file})

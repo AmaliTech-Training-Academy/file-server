@@ -13,5 +13,5 @@ urlpatterns = [
     path('file/<int:pk>/', FileDetailView.as_view(), name='file_detail'),
     path('logs/', views.logs, name='logs'),
     path('preview/<int:file_id>/',views.preview,name = 'preview'),
-    # path('display/<str:pdf_file>/',views.display_pdf,name = 'pdf_viewer')
+    path('display/<int:file_id>/',views.open_page,name = 'open_page')
     ]
