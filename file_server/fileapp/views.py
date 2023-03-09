@@ -8,16 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from authentication.models import CustomUser
 from django.http import HttpResponseForbidden
-from .thumbnails import generate_thumbnail
-from django.core.files.base import ContentFile
-import fitz
-import base64
-import io
-import os
-from django.http import HttpResponse
 from django.shortcuts import render
-from pdf2image import convert_from_path
-from PyPDF2 import PdfFileReader
+from django.http import FileResponse
 
 
 
@@ -118,27 +110,9 @@ def search_view(request):
 @login_required
 def preview(request, file_id):
     file = get_object_or_404(File, id=file_id)
-    
+
     if file.title.lower().endswith('.pdf'):
-        with fitz.open(file.file.path) as doc:
-            pages = [doc.load_page(p) for p in range(doc.page_count)]
-            file_contents = file.file.read()
-            file_b64 = base64.b64encode(file_contents).decode('utf-8')
-        return render(request, 'fileapp/preview.html', {'file': file, 'pages': pages, 'file_b64': file_b64})
+        return FileResponse(open(file.file.path, 'rb'), content_type='application/pdf')
     else:
         return render(request, 'fileapp/preview.html', {'file': file})
     
-# @login_required
-# def display_pdf(request, pdf_file):
-#     # Open the PDF file
-#     pdf = PdfFileReader(open(pdf_file, 'rb'))
-#     # Get the total number of pages in the PDF file
-#     total_pages = pdf.getNumPages()
-#     # Convert each page of the PDF file to an image
-#     images = []
-#     for i in range(total_pages):
-#         image = convert_from_path(pdf_file, dpi=200, first_page=i+1, last_page=i+1)[0]
-#         images.append(image)
-#     # Render the images on your webpage
-#     context = {'images': images}
-#     return render(request, 'fileapp/pdf_viewer.html', context)

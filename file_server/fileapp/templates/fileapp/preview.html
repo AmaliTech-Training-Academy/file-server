@@ -2,28 +2,9 @@
 {% block content %}
 {%load static%}
 
-
-  <h1>{{ file.title }}</h1>
-
-  <!-- preview.html -->
-
-{% if file.title|lower|slice:'-3:' == 'pdf' %}
-  <div >
-    <canvas id="pdf-canvas" width="700" height="700"></canvas>
-    <div>
-      <button id="prev-page">Previous Page</button>
-      <button id="next-page">Next Page</button>
-    </div>
-  </div>
-
-  <script src="{% static 'javascript/pdfjs/build/pdf.js' %}"></script>
-  <script src="{% static 'javascript/pdfjs/build/pdf.worker.js' %}"></script>
-  <script src="{% static 'javascript/preview.js' %}"></script>
-
-
-
-  {% elif file.title|lower|slice:'-3:' == 'jpg' %}
-  <img src="{{ file.file.url }}" alt="{{ file.title }}">
+ <h1>{{ file.title }}</h1>
+  {%if file.title|lower|slice:'-3:' == 'jpg' %}
+  <img width="500" height="500" src="{{ file.file.url }}" alt="{{ file.title }}">
   {% elif file.title|lower|slice:'-3:' == 'mp4' %}
   <video width="500" height="500" controls>
     <source src="{{ file.file.url }}" type="video/mp4">
