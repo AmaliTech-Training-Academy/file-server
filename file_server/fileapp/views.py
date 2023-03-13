@@ -24,7 +24,7 @@ def upload_file(request):
             form = FileForm(request.POST, request.FILES)
             if form.is_valid():
                 file = form.save()
-                if file.title.lower().endswith('.pdf'): 
+                if file.file.name.lower().endswith('.pdf'): 
                     file = form.save()
                     file.user = request.user
                     file_path = file.file.path  # Full file path
@@ -62,7 +62,7 @@ def send_file_email(request, file_id):
             email = EmailMessage(
                 subject,
                 message,
-                'douglas.danso@amalitech.com',
+                'douglasdanso66@gmail.com',
                 [recipient_email],
                 # ['bcc@example.com'],
                 reply_to=['another@example.com']
